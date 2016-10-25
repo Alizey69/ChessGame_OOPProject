@@ -21,6 +21,7 @@ public class King extends Piece{
     void move(int inirow, int inicolumn, int firow, int ficolumn){
         
         boolean check = true;
+        Piece.che = false;
         
         if((Chessboard.chance%2 == 0 && colour == true) || (Chessboard.chance%2 == 1 && colour == false)){
         
@@ -115,10 +116,18 @@ public class King extends Piece{
             Chessboard.chance++;
                 
     }
+    
     @Override
-    void kill(Piece p, int row, int col){
+    void kill(Piece p, int row, int column){
         p.alive = false;
-        Chessboard.boxes[row][col] = null;
+        Chessboard.graveyard[Chessboard.gravecounter] = p;
+        Chessboard.boxes[row][column] = null;
+        
+        Chessboard.gravecounter++;
+    }
+    @Override
+    boolean check(int inirow, int inicolumn){
+        return false;
     }
     
      @Override

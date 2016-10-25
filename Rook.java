@@ -60,6 +60,10 @@ public class Rook extends Piece {
                         
                             Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                             Chessboard.boxes[inirow][inicolumn] = null;
+                            
+                            if(check(firow, ficolumn) == true){
+                                System.out.println("Opponent move your King! Check!");
+                            }
                         }
                         else
                             check = false;
@@ -99,6 +103,10 @@ public class Rook extends Piece {
                             
                             Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                             Chessboard.boxes[inirow][inicolumn] = null;
+                            
+                            if(check(firow, ficolumn) == true){
+                                System.out.println("Opponent move your King! Check!");
+                            }
                         }
                         else
                             check = false;
@@ -150,6 +158,11 @@ public class Rook extends Piece {
                         
                                 Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                                 Chessboard.boxes[inirow][inicolumn] = null;
+                                
+                                if(check(firow, ficolumn) == true){
+                                System.out.println("Opponent move your King! Check!");
+                            }
+                                
                             }
                             else
                                 check = false;
@@ -193,6 +206,10 @@ public class Rook extends Piece {
                                 kill((Piece)Chessboard.boxes[firow][ficolumn], firow, ficolumn);
                                 Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                                 Chessboard.boxes[inirow][inicolumn] = null;
+                                
+                                if(check(firow, ficolumn) == true){
+                                    System.out.println("Opponent move your King! Check!");
+                                }
                             }
                             else
                                 check = false;
@@ -223,7 +240,10 @@ public class Rook extends Piece {
     @Override
     void kill(Piece p, int row, int column){
         p.alive = false;
+        Chessboard.graveyard[Chessboard.gravecounter] = p;
         Chessboard.boxes[row][column] = null;
+        
+        Chessboard.gravecounter++;
     }
     /*
     This is castling method of the Rook which implements the castling mechanism
@@ -231,7 +251,127 @@ public class Rook extends Piece {
     */
     void castling(King k){}
     
-    void check(King k){}
+    @Override
+    boolean check(int inirow, int inicolumn){
+        
+        Piece.che = false;
+        
+        Chessboard.krow = 0;
+        Chessboard.kcolumn = 0;
+        
+        boolean ch = true;
+        int i, j;
+       
+        boolean col = this.colour;
+        col = !col;
+        
+        King k = new King(col, true);
+        
+        //System.out.println(col);
+        
+        for(i = 0; i < 8; i++){
+            for(j = 0; j < 8; j++){
+                //System.out.println("Hi");
+                if(Chessboard.boxes[i][j] != null){
+                    if(Chessboard.boxes[i][j].getClass() == k.getClass() && Chessboard.boxes[i][j].colour == k.colour){
+                       //System.out.println("Hi");
+                       
+                        Chessboard.krow = i;
+                        Chessboard.kcolumn = j;
+      
+                        break;
+                        
+                    }  
+                }
+            }
+        }
+        
+        if(Math.abs(Chessboard.krow - inirow) <= 7 && Math.abs(Chessboard.kcolumn - inicolumn) == 0){
+                       // System.out.println("Hi1");
+                        for(i = inirow+1 ; i <= Chessboard.krow-1; i++){
+                            
+                            if(Piece.che == false){
+                            
+                                if(Chessboard.boxes[i][inicolumn] != null){
+                                    Piece.che = true;
+                                    break;
+                                }
+                            }
+                            else
+                                break;
+                        }
+                        
+                        for(i = inirow-1 ; i >= Chessboard.krow+1; i--){
+                            if(Piece.che == false){
+                            
+                                if(Chessboard.boxes[i][inicolumn] != null){
+                                    Piece.che = true;
+                                    break;
+                                }
+                            }
+                            else
+                                break;
+                        }
+                        
+                        if(Piece.che == false){
+                            
+                            if(Chessboard.boxes[inirow][inicolumn].colour != Chessboard.boxes[Chessboard.krow][Chessboard.kcolumn].colour){
+                                ch = true;
+                            }
+                            else
+                                ch = false;
+                        }
+                        else
+                            ch = false;
+                        
+                    }
+                    
+                    else if(Math.abs(Chessboard.krow - inirow) == 0 && Math.abs(Chessboard.kcolumn - inicolumn) <= 7){
+                         
+                        for(i = inicolumn+1 ; i <= Chessboard.kcolumn-1; i++){
+                            if(Piece.che == false){
+                            
+                                if(Chessboard.boxes[inirow][i] != null){
+                                    Piece.che = true;
+                                    break;
+                                }
+                            }
+                            else
+                                break;
+                            
+                        }
+                        
+                        for(i = inicolumn-1 ; i >= Chessboard.kcolumn+1; i--){
+                            if(Piece.che == false){
+                            
+                                if(Chessboard.boxes[inirow][i] != null){
+                                    Piece.che = true;
+                                    break;
+                                }
+                            }
+                            else
+                                break;
+                            
+                        }
+                        
+                        if(Piece.che == false){
+                            
+                            if(Chessboard.boxes[inirow][inicolumn].colour != Chessboard.boxes[Chessboard.krow][Chessboard.kcolumn].colour){
+                                ch = true;
+                            }
+                            else
+                                ch = false;
+                            
+                        }
+                        else
+                            ch = false;
+                 }
+                     else
+                        ch = false;
+        
+        return ch;
+        
+    }
     
     
     

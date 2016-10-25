@@ -44,6 +44,7 @@ public abstract class Piece{
     // Piece methods, to be inherited by all the sub pieces!
     abstract void move(int inirow, int inicolumn, int firow, int ficolumn);
     abstract void kill(Piece p, int row, int col);
+    abstract boolean check(int inirow, int inicolumn);
     
     public static boolean che = false;
     

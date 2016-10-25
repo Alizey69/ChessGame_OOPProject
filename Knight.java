@@ -20,6 +20,7 @@ public class Knight extends Piece{
     @Override
     void move(int inirow, int inicolumn, int firow, int ficolumn){
         boolean check = true;
+        Piece.che = false;
         
         if((Chessboard.chance%2 == 0 && colour == true) || (Chessboard.chance%2 == 1 && colour == false)){
             
@@ -32,12 +33,20 @@ public class Knight extends Piece{
                         
                         Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                         Chessboard.boxes[inirow][inicolumn] = null;
+                        
+                        if(check(firow, ficolumn) == true){
+                                System.out.println("Opponent move your King! Check!");
+                            }
                     }
                     
                     else if(Math.abs(firow - inirow) == 1 && Math.abs(ficolumn - inicolumn) == 2){
                         
                         Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                         Chessboard.boxes[inirow][inicolumn] = null;
+                        
+                        if(check(firow, ficolumn) == true){
+                                System.out.println("Opponent move your King! Check!");
+                            }
                         
                     }
                 
@@ -62,6 +71,10 @@ public class Knight extends Piece{
                             
                                 Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                                 Chessboard.boxes[inirow][inicolumn] = null;
+                                
+                                if(check(firow, ficolumn) == true){
+                                System.out.println("Opponent move your King! Check!");
+                            }
                              }
                              else
                                  check = false;
@@ -74,6 +87,10 @@ public class Knight extends Piece{
                             
                                 Chessboard.boxes[firow][ficolumn] = Chessboard.boxes[inirow][inicolumn];
                                 Chessboard.boxes[inirow][inicolumn] = null;
+                                
+                                if(check(firow, ficolumn) == true){
+                                System.out.println("Opponent move your King! Check!");
+                            }
                             }
                             else
                                 check = false;
@@ -102,12 +119,71 @@ public class Knight extends Piece{
     
     @Override
     void kill(Piece p, int row, int column){
-        
         p.alive = false;
+        Chessboard.graveyard[Chessboard.gravecounter] = p;
         Chessboard.boxes[row][column] = null;
+        
+        Chessboard.gravecounter++;
     }
     
-    void check(King k){}
+    @Override
+    boolean check(int inirow, int inicolumn){
+        
+        Chessboard.krow = 0;
+        Chessboard.kcolumn = 0;
+        
+        boolean ch = true;
+        int i, j;
+       
+        boolean col = this.colour;
+        col = !col;
+        
+        King k = new King(col, true);
+        
+        //System.out.println(col);
+        
+        for(i = 0; i < 8; i++){
+            for(j = 0; j < 8; j++){
+                //System.out.println("Hi");
+                if(Chessboard.boxes[i][j] != null){
+                    if(Chessboard.boxes[i][j].getClass() == k.getClass() && Chessboard.boxes[i][j].colour == k.colour){
+                       //System.out.println("Hi");
+                       
+                        Chessboard.krow = i;
+                        Chessboard.kcolumn = j;
+      
+                        break;
+                        
+                    }  
+                }
+            }
+        }
+        
+        if(Math.abs(Chessboard.krow - inirow) == 2 && Math.abs(Chessboard.kcolumn - inicolumn) == 1){
+                            
+                            if(Chessboard.boxes[inirow][inicolumn].colour != Chessboard.boxes[Chessboard.krow][Chessboard.kcolumn].colour){
+                               
+                                ch = true;
+                            }
+                            else
+                                ch = false;
+                        }
+                        
+                        else if(Math.abs(Chessboard.krow - inirow) == 1 && Math.abs(Chessboard.kcolumn - inicolumn) == 2){
+                            
+                            if(Chessboard.boxes[inirow][inicolumn].colour != Chessboard.boxes[Chessboard.krow][Chessboard.kcolumn].colour){
+                                ch = true;
+                            }
+                            else
+                                ch = false;
+                        }
+                        
+                        else 
+                            ch = false;
+                        
+        return ch;
+    
+    }
     
     void checkMate(King k){}
     
